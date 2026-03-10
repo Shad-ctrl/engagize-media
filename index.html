@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engagize — Content Growth Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --midnight: #0B0F19;
+    --indigo: #4F46E5;
+    --cyan: #22D3EE;
+    --graphite: #1F2937;
+    --white: #F9FAFB;
+    --indigo-dim: rgba(79,70,229,0.12);
+    --cyan-dim: rgba(34,211,238,0.08);
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--midnight);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  .cursor {
+    position: fixed;
+    width: 10px; height: 10px;
+    background: var(--cyan);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s, background 0.3s;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(34,211,238,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s, border-color 0.3s;
+  }
+
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(79,70,229,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,70,229,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 22px 6vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(20px);
+    background: rgba(11,15,25,0.75);
+    border-bottom: 1px solid rgba(79,70,229,0.1);
+  }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--white);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-logo span { color: var(--cyan); }
+  .logo-dot {
+    width: 6px; height: 6px;
+    background: var(--indigo);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(249,250,251,0.5);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--cyan); }
+
+  .nav-cta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 10px 22px;
+    border: 1px solid var(--indigo);
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .nav-cta:hover { background: var(--indigo); }
+
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 0 6vw;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: 20%; left: 10%;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(79,70,229,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-glow-2 {
+    position: absolute;
+    bottom: 10%; right: 5%;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(34,211,238,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-content {
+    max-width: 760px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .hero-label::before {
+    content: '';
+    width: 32px; height: 1px;
+    background: var(--cyan);
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(52px, 7vw, 96px);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -3px;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+  .hero-title .accent { color: var(--indigo); }
+  .hero-title .accent-cyan { color: var(--cyan); }
+
+  .hero-sub {
+    font-size: 18px;
+    font-weight: 300;
+    color: rgba(249,250,251,0.55);
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 36px;
+    background: var(--indigo);
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(79,70,229,0.4);
+  }
+
+  .btn-ghost {
+    font-size: 14px;
+    color: rgba(249,250,251,0.6);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+  }
+  .btn-ghost:hover { color: var(--white); }
+
+  .hero-metrics {
+    position: absolute;
+    right: 6vw; bottom: 15%;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s 1s forwards;
+  }
+  .metric { text-align: right; }
+  .metric-num {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    color: rgba(249,250,251,0.6);
+  }
+  .metric-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(249,250,251,0.25);
+  }
+  .metric-line {
+    width: 100%; height: 1px;
+    background: rgba(79,70,229,0.3);
+    margin-top: 12px;
+  }
+
+  .marquee-section {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid rgba(79,70,229,0.15);
+    border-bottom: 1px solid rgba(79,70,229,0.15);
+    padding: 18px 0;
+    overflow: hidden;
+    background: rgba(79,70,229,0.04);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 48px;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(249,250,251,0.3);
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    flex-shrink: 0;
+  }
+  .marquee-sep {
+    width: 4px; height: 4px;
+    background: var(--indigo);
+    border-radius: 50%;
+  }
+
+  section { position: relative; z-index: 1; }
+  .section-inner { padding: 120px 6vw; }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::before {
+    content: '';
+    width: 24px; height: 1px;
+    background: var(--cyan);
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 4vw, 56px);
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1.05;
+    margin-bottom: 60px;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .service-card {
+    background: var(--graphite);
+    padding: 44px 40px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--indigo), var(--cyan));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-card:hover { background: #252d3d; }
+
+  .service-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: rgba(249,250,251,0.2);
+    letter-spacing: 0.1em;
+    margin-bottom: 32px;
+  }
+  .service-icon {
+    width: 44px; height: 44px;
+    margin-bottom: 24px;
+    color: var(--indigo);
+  }
+  .service-title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 16px;
+  }
+  .service-desc {
+    font-size: 14px;
+    font-weight: 300;
+    color: rgba(249,250,251,0.5);
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+  .service-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 5px 12px;
+    border: 1px solid rgba(79,70,229,0.3);
+    color: rgba(249,250,251,0.4);
+  }
+
+  #about { background: var(--graphite); }
+  .about-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .about-visual { position: relative; height: 480px; }
+  .about-card {
+    position: absolute;
+    background: var(--midnight);
+    border: 1px solid rgba(79,70,229,0.2);
+    padding: 28px;
+    transition: transform 0.3s;
+  }
+  .about-card:hover { transform: translateY(-4px); }
+  .card-1 { top: 0; left: 0; right: 60px; }
+  .card-2 { bottom: 0; left: 40px; right: 0; }
+  .card-stat {
+    font-family: var(--font-display);
+    font-size: 52px;
+    font-weight: 800;
+    letter-spacing: -3px;
+    color: var(--indigo);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .card-stat span { color: var(--cyan); }
+  .card-label {
+    font-size: 13px;
+    color: rgba(249,250,251,0.4);
+    font-weight: 300;
+  }
+  .card-accent {
+    position: absolute;
+    top: -1px; right: 24px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    background: var(--midnight);
+    padding: 3px 10px;
+    border: 1px solid var(--cyan);
+    transform: translateY(-50%);
+  }
+  .about-text p {
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(249,250,251,0.6);
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+  .about-text p strong {
+    color: var(--white);
+    font-weight: 500;
+  }
+  .founder-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border: 1px solid rgba(79,70,229,0.3);
+    margin-top: 32px;
+  }
+  .founder-avatar {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--indigo), var(--cyan));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+  .founder-name {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  .founder-role {
+    font-size: 12px;
+    color: rgba(249,250,251,0.4);
+    font-family: var(--font-mono);
+    letter-spacing: 0.05em;
+  }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+  }
+  .portfolio-card {
+    background: var(--graphite);
+    padding: 52px 48px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  .portfolio-card:hover { background: #252d3d; }
+  .portfolio-card.featured {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .portfolio-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 20px;
+  }
+  .portfolio-title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+  .portfolio-desc {
+    font-size: 14px;
+    font-weight: 300;
+    color: rgba(249,250,251,0.5);
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+  .case-study-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .cs-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(249,250,251,0.3);
+    margin-bottom: 6px;
+  }
+  .cs-value {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.3px;
+  }
+  .portfolio-visual {
+    height: 200px;
+    background: var(--midnight);
+    border: 1px solid rgba(79,70,229,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pv-name {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, var(--indigo), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-align: center;
+  }
+  .pv-sub {
+    font-size: 11px;
+    color: rgba(249,250,251,0.3);
+    font-family: var(--font-mono);
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+    text-align: center;
+  }
+
+  #process { background: var(--graphite); }
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+  }
+  .process-step {
+    background: var(--midnight);
+    padding: 44px 32px;
+  }
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: 48px;
+    font-weight: 700;
+    color: rgba(79,70,229,0.15);
+    line-height: 1;
+    margin-bottom: 24px;
+    letter-spacing: -3px;
+  }
+  .step-title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+  }
+  .step-desc {
+    font-size: 13px;
+    font-weight: 300;
+    color: rgba(249,250,251,0.45);
+    line-height: 1.7;
+  }
+
+  .contact-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .contact-tagline {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 4vw, 64px);
+    font-weight: 800;
+    letter-spacing: -3px;
+    line-height: 1.05;
+    margin-bottom: 28px;
+  }
+  .contact-tagline span { color: var(--indigo); }
+  .contact-text {
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(249,250,251,0.5);
+    line-height: 1.8;
+    margin-bottom: 48px;
+  }
+  .contact-detail {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(79,70,229,0.1);
+  }
+  .contact-detail-icon {
+    width: 36px; height: 36px;
+    background: var(--indigo-dim);
+    border: 1px solid rgba(79,70,229,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--indigo);
+  }
+  .contact-detail-text { font-size: 14px; color: rgba(249,250,251,0.6); }
+  .contact-detail-text strong {
+    display: block;
+    color: var(--white);
+    font-weight: 500;
+    font-size: 15px;
+  }
+  .form-group { margin-bottom: 20px; }
+  .form-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(249,250,251,0.4);
+    margin-bottom: 10px;
+  }
+  .form-input, .form-textarea {
+    width: 100%;
+    background: var(--graphite);
+    border: 1px solid rgba(79,70,229,0.15);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 14px;
+    padding: 14px 18px;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: none;
+  }
+  .form-input:focus, .form-textarea:focus { border-color: var(--indigo); }
+  .form-input::placeholder, .form-textarea::placeholder { color: rgba(249,250,251,0.2); }
+  .form-textarea { min-height: 120px; }
+  .btn-submit {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, var(--indigo), #6366f1);
+    color: white;
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    border: none;
+    cursor: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 48px rgba(79,70,229,0.5);
+  }
+
+  footer {
+    background: var(--graphite);
+    border-top: 1px solid rgba(79,70,229,0.15);
+    padding: 48px 6vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+  }
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  .footer-logo span { color: var(--cyan); }
+  .footer-copy {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: rgba(249,250,251,0.25);
+  }
+  .footer-social { display: flex; gap: 16px; }
+  .social-link {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(79,70,229,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(249,250,251,0.4);
+    text-decoration: none;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .social-link:hover { color: var(--cyan); border-color: var(--cyan); }
+
+  .scroll-line {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--indigo), var(--cyan));
+    z-index: 200;
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 900px) {
+    .services-grid { grid-template-columns: 1fr; }
+    .about-layout { grid-template-columns: 1fr; }
+    .about-visual { height: 280px; }
+    .portfolio-grid { grid-template-columns: 1fr; }
+    .portfolio-card.featured { grid-column: auto; display: block; }
+    .process-steps { grid-template-columns: 1fr 1fr; }
+    .contact-layout { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .hero-metrics { display: none; }
+    footer { flex-direction: column; gap: 20px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scroll-line" id="scrollLine"></div>
+<div class="grid-bg"></div>
+
+<nav>
+  <a href="#" class="nav-logo">Engag<span>ize</span> <span class="logo-dot"></span></a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#portfolio">Work</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="mailto:engagize.agency@gmail.com" class="nav-cta">Get in touch &rarr;</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow-2"></div>
+  <div class="hero-content">
+    <div class="hero-label">Content Growth Studio</div>
+    <h1 class="hero-title">
+      Strategy.<br>
+      <span class="accent">Branding.</span><br>
+      <span class="accent-cyan">Growth.</span>
+    </h1>
+    <p class="hero-sub">We design content systems that drive consistent audience growth — for creators and brands who are serious about scale.</p>
+    <div class="hero-actions">
+      <a href="#services" class="btn-primary">
+        Explore Services
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#portfolio" class="btn-ghost">
+        View Our Work
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+  <div class="hero-metrics">
+    <div class="metric">
+      <div class="metric-num">3+</div>
+      <div class="metric-label">Core Services</div>
+      <div class="metric-line"></div>
+    </div>
+    <div class="metric">
+      <div class="metric-num">100%</div>
+      <div class="metric-label">Strategy-Focused</div>
+      <div class="metric-line"></div>
+    </div>
+    <div class="metric">
+      <div class="metric-num">&infin;</div>
+      <div class="metric-label">Growth Potential</div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-section">
+  <div class="marquee-track">
+    <div class="marquee-item">Channel Revamp <span class="marquee-sep"></span> Content Strategy <span class="marquee-sep"></span> Brand Identity <span class="marquee-sep"></span> Growth Systems <span class="marquee-sep"></span> Niche Positioning <span class="marquee-sep"></span> Visual Direction <span class="marquee-sep"></span> Audience Growth <span class="marquee-sep"></span> Content Systems <span class="marquee-sep"></span></div>
+    <div class="marquee-item">Channel Revamp <span class="marquee-sep"></span> Content Strategy <span class="marquee-sep"></span> Brand Identity <span class="marquee-sep"></span> Growth Systems <span class="marquee-sep"></span> Niche Positioning <span class="marquee-sep"></span> Visual Direction <span class="marquee-sep"></span> Audience Growth <span class="marquee-sep"></span> Content Systems <span class="marquee-sep"></span></div>
+  </div>
+</div>
+
+<section id="services">
+  <div class="section-inner">
+    <div class="section-label">What We Do</div>
+    <h2 class="section-title reveal">Built for creators<br>who want to scale.</h2>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-num">01</div>
+        <svg class="service-icon" viewBox="0 0 44 44" fill="none">
+          <rect x="4" y="4" width="36" height="36" rx="2" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M14 22L18 26L30 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h3 class="service-title">Channel Revamp</h3>
+        <p class="service-desc">Full-scale channel optimization — from visual identity to content positioning. We rebuild your channel architecture for maximum impact.</p>
+        <div class="service-tags">
+          <span class="tag">Branding</span>
+          <span class="tag">Thumbnails</span>
+          <span class="tag">Positioning</span>
+          <span class="tag">Structure</span>
+        </div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-num">02</div>
+        <svg class="service-icon" viewBox="0 0 44 44" fill="none">
+          <path d="M8 34L8 22M16 34L16 14M24 34L24 18M32 34L32 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M8 22L16 14L24 18L32 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h3 class="service-title">Content Strategy</h3>
+        <p class="service-desc">Data-informed frameworks that align your content with audience growth. From niche positioning to trend analysis — we map the full picture.</p>
+        <div class="service-tags">
+          <span class="tag">Niche Positioning</span>
+          <span class="tag">Trend Analysis</span>
+          <span class="tag">Frameworks</span>
+        </div>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-num">03</div>
+        <svg class="service-icon" viewBox="0 0 44 44" fill="none">
+          <circle cx="22" cy="16" r="8" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M10 38C10 32.477 15.373 28 22 28C28.627 28 34 32.477 34 38" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <h3 class="service-title">Brand Identity</h3>
+        <p class="service-desc">Visual and strategic identity systems built for creators. We define how your audience recognizes, remembers, and returns to your content.</p>
+        <div class="service-tags">
+          <span class="tag">Visual Direction</span>
+          <span class="tag">Content Identity</span>
+          <span class="tag">Audience</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="section-inner">
+    <div class="about-layout">
+      <div class="about-visual reveal">
+        <div class="about-card card-1">
+          <span class="card-accent">Approach</span>
+          <div class="card-stat">Clean.<span><br>Smart.</span></div>
+          <div class="card-label">Data-driven strategy over hype</div>
+        </div>
+        <div class="about-card card-2">
+          <span class="card-accent">Focus</span>
+          <div class="card-stat" style="font-size:36px;letter-spacing:-2px;">Systems<br><span style="color:var(--cyan);">That Scale</span></div>
+          <div class="card-label">Built for consistent, long-term growth</div>
+        </div>
+      </div>
+      <div class="about-text reveal">
+        <div class="section-label">About</div>
+        <h2 class="section-title" style="margin-bottom:32px;">Where strategy<br>meets content.</h2>
+        <p>Engagize is a <strong>Content Strategy &amp; Channel Growth Studio</strong> built for creators and brands who want to build real, lasting digital authority — not viral accidents.</p>
+        <p>We combine strategic thinking with deep platform expertise to create content systems that compound over time. Every decision is intentional. Every framework is designed to scale.</p>
+        <p>No hype. No guru energy. Just clean, analytical, growth-focused work.</p>
+        <div class="founder-tag">
+          <div class="founder-avatar">SA</div>
+          <div>
+            <div class="founder-name">Shadman Ansari</div>
+            <div class="founder-role">Founder — Engagize</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="portfolio">
+  <div class="section-inner">
+    <div class="section-label">Case Studies</div>
+    <h2 class="section-title reveal">Work that speaks<br>for itself.</h2>
+    <div class="portfolio-grid">
+      <div class="portfolio-card featured reveal">
+        <div>
+          <div class="portfolio-tag">Featured &mdash; Channel Revamp</div>
+          <h3 class="portfolio-title">LCB Kian</h3>
+          <p class="portfolio-desc">Inconsistent branding and an unclear niche were limiting growth. We executed a full content positioning and visual identity overhaul — resulting in a cohesive brand with stronger audience targeting and cleaner messaging architecture.</p>
+          <div class="case-study-grid">
+            <div>
+              <div class="cs-label">Problem</div>
+              <div class="cs-value">Inconsistent Branding</div>
+            </div>
+            <div>
+              <div class="cs-label">Strategy</div>
+              <div class="cs-value">Content Repositioning</div>
+            </div>
+            <div>
+              <div class="cs-label">Result</div>
+              <div class="cs-value">Brand Consistency &uarr;</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="portfolio-visual">
+            <div>
+              <div class="pv-name">LCB Kian</div>
+              <div class="pv-sub">Channel Revamp</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="portfolio-card reveal">
+        <div class="portfolio-tag">Service &mdash; Content Strategy</div>
+        <h3 class="portfolio-title">Niche Positioning<br>Framework</h3>
+        <p class="portfolio-desc">A systematic approach to identifying content gaps and positioning within a niche for compounding growth — applied across creator channels.</p>
+        <div style="margin-top:32px;">
+          <span class="tag" style="margin-right:8px;">Niche Research</span>
+          <span class="tag" style="margin-right:8px;">Gap Analysis</span>
+          <span class="tag">Content Map</span>
+        </div>
+      </div>
+      <div class="portfolio-card reveal">
+        <div class="portfolio-tag">Service &mdash; Brand Identity</div>
+        <h3 class="portfolio-title">Creator Brand<br>Systems</h3>
+        <p class="portfolio-desc">End-to-end visual and strategic brand identity for content creators — from color systems to content tone and audience positioning.</p>
+        <div style="margin-top:32px;">
+          <span class="tag" style="margin-right:8px;">Visual Identity</span>
+          <span class="tag" style="margin-right:8px;">Tone of Voice</span>
+          <span class="tag">Audience Map</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <div class="section-inner">
+    <div class="section-label">How We Work</div>
+    <h2 class="section-title reveal">A process built<br>for results.</h2>
+    <div class="process-steps">
+      <div class="process-step reveal">
+        <div class="step-num">01</div>
+        <h3 class="step-title">Audit &amp; Diagnose</h3>
+        <p class="step-desc">A thorough analysis of your current channel, content, and brand positioning to identify gaps and opportunities.</p>
+      </div>
+      <div class="process-step reveal">
+        <div class="step-num">02</div>
+        <h3 class="step-title">Strategize</h3>
+        <p class="step-desc">We build a targeted growth framework — niche positioning, content systems, and a clear roadmap aligned to your goals.</p>
+      </div>
+      <div class="process-step reveal">
+        <div class="step-num">03</div>
+        <h3 class="step-title">Execute</h3>
+        <p class="step-desc">Hands-on delivery — from visual brand direction to content structure — implemented with precision and attention to detail.</p>
+      </div>
+      <div class="process-step reveal">
+        <div class="step-num">04</div>
+        <h3 class="step-title">Optimize</h3>
+        <p class="step-desc">Continuous refinement based on real data. We track what works and iterate the system to compound growth over time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="section-inner">
+    <div class="contact-layout">
+      <div class="reveal">
+        <div class="section-label">Let's Work</div>
+        <h2 class="contact-tagline">Ready to <span>build</span> something serious?</h2>
+        <p class="contact-text">If you're a creator or brand looking to grow with strategy and intent — let's talk. We work with people who are serious about long-term digital authority.</p>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4L8 9L14 4M2 12V4H14V12H2Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="contact-detail-text">
+            <strong>engagize.agency@gmail.com</strong>
+            Primary Contact
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="3" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/><circle cx="11.5" cy="4.5" r="0.75" fill="currentColor"/></svg>
+          </div>
+          <div class="contact-detail-text">
+            <strong>@engagize</strong>
+            Instagram &mdash; Engagize Content Growth Studio
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8C2 4.686 4.686 2 8 2s6 2.686 6 6-2.686 6-6 6-6-2.686-6-6z" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </div>
+          <div class="contact-detail-text">
+            <strong>Channel Revamp / Content Strategy / Brand Identity</strong>
+            Core Services
+          </div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="form-group">
+          <label class="form-label">Your Name</label>
+          <input type="text" class="form-input" placeholder="e.g. Alex Johnson">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-input" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Service Needed</label>
+          <input type="text" class="form-input" placeholder="Channel Revamp / Content Strategy / Brand Identity">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tell us about your project</label>
+          <textarea class="form-textarea" placeholder="Describe your channel, goals, and what you're looking for..."></textarea>
+        </div>
+        <button class="btn-submit" id="submitBtn" onclick="handleSubmit()">
+          Send Message
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Engag<span>ize</span></div>
+  <div class="footer-copy">&copy; 2025 Engagize &mdash; Strategy. Branding. Growth.</div>
+  <div class="footer-social">
+    <a href="https://instagram.com/engagize" class="social-link" target="_blank" title="Instagram">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="3" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/><circle cx="11.5" cy="4.5" r="0.75" fill="currentColor"/></svg>
+    </a>
+    <a href="mailto:engagize.agency@gmail.com" class="social-link" title="Email">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4L8 9L14 4M2 12V4H14V12H2Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</footer>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  const cursorRing = document.getElementById('cursorRing');
+  let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    cursor.style.left = mouseX + 'px';
+    cursor.style.top = mouseY + 'px';
+  });
+
+  (function animateRing() {
+    ringX += (mouseX - ringX) * 0.12;
+    ringY += (mouseY - ringY) * 0.12;
+    cursorRing.style.left = ringX + 'px';
+    cursorRing.style.top = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  })();
+
+  document.querySelectorAll('a, button, .service-card, .portfolio-card').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '18px';
+      cursor.style.height = '18px';
+      cursorRing.style.width = '52px';
+      cursorRing.style.height = '52px';
+      cursorRing.style.borderColor = 'rgba(79,70,229,0.6)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '10px';
+      cursor.style.height = '10px';
+      cursorRing.style.width = '36px';
+      cursorRing.style.height = '36px';
+      cursorRing.style.borderColor = 'rgba(34,211,238,0.4)';
+    });
+  });
+
+  const scrollLine = document.getElementById('scrollLine');
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+    scrollLine.style.transform = 'scaleX(' + pct + ')';
+  });
+
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => io.observe(el));
+
+  document.querySelectorAll('.service-card').forEach((el, i) => {
+    el.style.transitionDelay = (i * 80) + 'ms';
+  });
+
+  function handleSubmit() {
+    const btn = document.getElementById('submitBtn');
+    btn.innerHTML = 'Message Sent &#10003;';
+    btn.style.background = 'linear-gradient(135deg, #059669, #10b981)';
+    setTimeout(() => {
+      btn.innerHTML = 'Send Message <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      btn.style.background = '';
+    }, 3000);
+  }
+</script>
+</body>
+</html>
